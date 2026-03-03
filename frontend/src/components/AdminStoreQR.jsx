@@ -29,18 +29,53 @@ const AdminStoreQR = ({ username, name }) => {
     const downloadQR = () => {
         const svg = document.getElementById('admin-store-qr');
         if (!svg) return;
+
+        // Render SVG → Image → Canvas with card styling
         const svgData = new XMLSerializer().serializeToString(svg);
-        const canvas = document.createElement('canvas');
-        const ctx = canvas.getContext('2d');
-        const img = new Image();
         const blob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
         const url = URL.createObjectURL(blob);
+
+        const img = new Image();
         img.onload = () => {
-            canvas.width = 300;
-            canvas.height = 300;
+            const PADDING = 48;
+            const QR_SIZE = 400;
+            const TOTAL = QR_SIZE + PADDING * 2;
+            const RADIUS = 40;
+
+            const canvas = document.createElement('canvas');
+            // 2× pixel density for crisp output
+            canvas.width = TOTAL * 2;
+            canvas.height = TOTAL * 2;
+            const ctx = canvas.getContext('2d');
+            ctx.scale(2, 2);
+
+            // ── Drop shadow ──
+            ctx.shadowColor = 'rgba(0, 0, 0, 0.12)';
+            ctx.shadowBlur = 30;
+            ctx.shadowOffsetX = 0;
+            ctx.shadowOffsetY = 8;
+
+            // ── White rounded card ──
             ctx.fillStyle = '#ffffff';
-            ctx.fillRect(0, 0, 300, 300);
-            ctx.drawImage(img, 0, 0, 300, 300);
+            ctx.beginPath();
+            ctx.moveTo(RADIUS, 0);
+            ctx.lineTo(TOTAL - RADIUS, 0);
+            ctx.quadraticCurveTo(TOTAL, 0, TOTAL, RADIUS);
+            ctx.lineTo(TOTAL, TOTAL - RADIUS);
+            ctx.quadraticCurveTo(TOTAL, TOTAL, TOTAL - RADIUS, TOTAL);
+            ctx.lineTo(RADIUS, TOTAL);
+            ctx.quadraticCurveTo(0, TOTAL, 0, TOTAL - RADIUS);
+            ctx.lineTo(0, RADIUS);
+            ctx.quadraticCurveTo(0, 0, RADIUS, 0);
+            ctx.closePath();
+            ctx.fill();
+
+            // ── Reset shadow before drawing QR ──
+            ctx.shadowColor = 'transparent';
+
+            // ── Draw QR code ──
+            ctx.drawImage(img, PADDING, PADDING, QR_SIZE, QR_SIZE);
+
             URL.revokeObjectURL(url);
             const pngUrl = canvas.toDataURL('image/png');
             const a = document.createElement('a');
@@ -101,13 +136,6 @@ const AdminStoreQR = ({ username, name }) => {
             <AnimatePresence>
                 {showModal && (
                     <>
-                        <motion.div
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            exit={{ opacity: 0 }}
-                            onClick={() => setShowModal(false)}
-                            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50"
-                        />
                         <motion.div
                             initial={{ opacity: 0, scale: 0.9, y: 20 }}
                             animate={{ opacity: 1, scale: 1, y: 0 }}
