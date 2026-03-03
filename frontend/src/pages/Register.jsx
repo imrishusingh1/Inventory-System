@@ -16,6 +16,7 @@ import Button from '../components/common/Button';
 ======================= */
 const schema = yup.object({
   name: yup.string().required('Full name is required'),
+  username: yup.string().min(3, 'Min 3 characters').matches(/^[a-z0-9_]+$/i, 'Lowercase letters, numbers, underscores only').required('Username is required'),
   email: yup
     .string()
     .email('Invalid email address')
@@ -44,7 +45,8 @@ const Register = () => {
         data.name,
         data.email,
         data.password,
-        'admin' // ✅ auto-assigned role
+        'admin',   // ✅ auto-assigned role
+        data.username
       );
 
       toast.success('Account created successfully!');
@@ -111,6 +113,14 @@ const Register = () => {
                 placeholder="John Doe"
                 error={errors.name}
                 {...register('name')}
+              />
+
+              <Input
+                label="Username"
+                type="text"
+                placeholder="johnadmin"
+                error={errors.username}
+                {...register('username')}
               />
 
               <Input

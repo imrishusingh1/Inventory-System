@@ -1,15 +1,16 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { 
-  LayoutDashboard, 
-  Package, 
-  TrendingUp, 
-  TrendingDown, 
-  AlertTriangle, 
-  FileText, 
+import {
+  LayoutDashboard,
+  Package,
+  TrendingUp,
+  TrendingDown,
+  AlertTriangle,
+  FileText,
   LogOut,
   X,
-  PieChart
+  PieChart,
+  ShoppingBag
 } from 'lucide-react';
 import { clsx } from 'clsx';
 import { useAuth } from '../../context/AuthContext';
@@ -17,7 +18,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 const Sidebar = ({ isOpen, onClose }) => {
   const { user, logout } = useAuth();
-  
+
   const links = [
     { name: 'Dashboard', path: '/dashboard', icon: LayoutDashboard, roles: ['admin', 'staff'] },
     { name: 'Products', path: '/products', icon: Package, roles: ['admin', 'staff'] },
@@ -25,6 +26,7 @@ const Sidebar = ({ isOpen, onClose }) => {
     { name: 'Stock Out', path: '/stock-out', icon: TrendingDown, roles: ['admin', 'staff'] },
     { name: 'Low Stock', path: '/low-stock', icon: AlertTriangle, roles: ['admin', 'staff'] },
     { name: 'Reports', path: '/reports', icon: FileText, roles: ['admin'] },
+    { name: 'Orders', path: '/orders', icon: ShoppingBag, roles: ['admin'] },
   ];
 
   // Filter links based on user role
@@ -35,9 +37,9 @@ const Sidebar = ({ isOpen, onClose }) => {
       {/* Header */}
       <div className="flex items-center justify-between p-6">
         <div className="flex items-center gap-3">
-            <div className="p-2 bg-brand-600 rounded-lg">
-                <PieChart className="text-white w-6 h-6" />
-            </div>
+          <div className="p-2 bg-brand-600 rounded-lg">
+            <PieChart className="text-white w-6 h-6" />
+          </div>
           <span className="text-xl font-bold text-gray-900 tracking-tight">Invento</span>
         </div>
         <button onClick={onClose} className="lg:hidden p-2 text-gray-500 hover:bg-gray-100 rounded-lg">
@@ -54,8 +56,8 @@ const Sidebar = ({ isOpen, onClose }) => {
             onClick={() => window.innerWidth < 1024 && onClose()}
             className={({ isActive }) => clsx(
               "flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 font-medium",
-              isActive 
-                ? "bg-brand-50 text-brand-700 shadow-sm" 
+              isActive
+                ? "bg-brand-50 text-brand-700 shadow-sm"
                 : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
             )}
           >
@@ -68,15 +70,15 @@ const Sidebar = ({ isOpen, onClose }) => {
       {/* User & Logout */}
       <div className="p-4 border-t border-gray-200">
         <div className="flex items-center gap-3 px-4 py-3 mb-2">
-            <div className="w-10 h-10 rounded-full bg-brand-100 flex items-center justify-center text-brand-700 font-bold">
-                {user?.name?.charAt(0).toUpperCase()}
-            </div>
-            <div className="flex-1 min-w-0">
-                <p className="text-sm font-semibold text-gray-900 truncate">{user?.name}</p>
-                <p className="text-xs text-gray-500 truncate capitalize">{user?.role}</p>
-            </div>
+          <div className="w-10 h-10 rounded-full bg-brand-100 flex items-center justify-center text-brand-700 font-bold">
+            {user?.name?.charAt(0).toUpperCase()}
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="text-sm font-semibold text-gray-900 truncate">{user?.name}</p>
+            <p className="text-xs text-gray-500 truncate capitalize">{user?.role}</p>
+          </div>
         </div>
-        <button 
+        <button
           onClick={logout}
           className="w-full flex items-center gap-3 px-4 py-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors text-sm font-medium"
         >

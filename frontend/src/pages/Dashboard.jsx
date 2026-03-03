@@ -12,6 +12,7 @@ import productService from '../services/productService';
 import stockService from '../services/stockService';
 import reportService from '../services/reportService';
 import { useAuth } from '../context/AuthContext';
+import AdminStoreQR from '../components/AdminStoreQR';
 
 const Dashboard = () => {
   const { user } = useAuth();
@@ -174,6 +175,11 @@ const Dashboard = () => {
           </button>
         </div>
       </div>
+
+      {/* Store QR Code */}
+      {user?.username && (
+        <AdminStoreQR username={user.username} name={user.name} />
+      )}
     </div>
   );
 };

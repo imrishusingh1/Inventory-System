@@ -9,8 +9,8 @@ const authService = {
     return response.data;
   },
 
-  register: async (name, email, password, role) => {
-    const response = await api.post('/auth/register', { name, email, password, role });
+  register: async (name, email, password, role, username) => {
+    const response = await api.post('/auth/register', { name, username, email, password, role });
     if (response.data.token) {
       localStorage.setItem('token', response.data.token);
     }
@@ -29,7 +29,7 @@ const authService = {
       return null;
     }
   },
-  
+
   isAuthenticated: () => {
     return !!localStorage.getItem('token');
   }
