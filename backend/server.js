@@ -1,4 +1,5 @@
-require('dotenv').config();
+const dotenv = require('dotenv');
+dotenv.config({ path: require('path').resolve(__dirname, '.env') });
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
@@ -7,6 +8,8 @@ const productRouter = require('./routes/ProductRouter');
 const stockRouter = require('./routes/StockRouter');
 const reportRouter = require('./routes/ReportRouter');
 const exportRouter = require('./routes/ExportRouter');
+const orderRouter = require('./routes/OrderRouter');
+const publicRouter = require('./routes/PublicRouter');
 
 const helmet = require("helmet");
 const rateLimit = require("express-rate-limit");
@@ -71,6 +74,8 @@ app.use('/api/products', productRouter);
 app.use('/api/stock', stockRouter);
 app.use('/api/reports', reportRouter);
 app.use('/api/export', exportRouter);
+app.use('/api/orders', orderRouter);
+app.use('/api/public', publicRouter);
 
 // Global Error Handler
 const globalErrorHandler = require('./middlewares/GlobalErrorHandler');
